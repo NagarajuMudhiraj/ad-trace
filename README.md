@@ -5,6 +5,7 @@
 [![ProtT5-XL](https://img.shields.io/badge/PLM-ProtT5--XL--UniRef50-darkgreen.svg)](https://huggingface.co/Rostlab/prot_t5_xl_half_uniref50-enc)
 [![FastAPI](https://img.shields.io/badge/FastAPI-1.0-009688.svg)](https://fastapi.tiangolo.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Live Architecture](https://img.shields.io/badge/Live_Demo-Interactive_Architecture-blueviolet.svg)](https://nagarajumudhiraj.github.io/ad-trace/architecture.html)
 
 > **A rigorous, zero-leakage computational biology platform and machine learning benchmark for classifying Alzheimer's Disease (MONDO_0004975) associated proteins directly from sequence representations, molecular biophysics, and interactome networks.**
 
@@ -195,7 +196,7 @@ To guarantee complete scientific integrity and prevent benchmark inflation:
 AD-TRACE couples deterministic biological data engineering with high-capacity protein language models, biophysical descriptors, and graph interactome networks.
 
 > 📊 **Interactive Diagram:** Open the standalone interactive architecture visualization in your browser:  
-> **[AD-TRACE Interactive Architecture Diagram](docs/architecture.html)** (Powered by Archify with dark/light themes, live motion, and inspection tools).
+> **[AD-TRACE Interactive Architecture Diagram (Live)](https://nagarajumudhiraj.github.io/ad-trace/architecture.html)** (Powered by Archify with dark/light themes, live motion, and inspection tools).
 
 ```mermaid
 flowchart LR
