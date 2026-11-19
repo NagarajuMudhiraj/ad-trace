@@ -1,5 +1,6 @@
 # AD-TRACE — Alzheimer's Disease Protein Sequence Classification & Multi-Modal Benchmark
 
+[![CI](https://github.com/NagarajuMudhiraj/ad-trace/actions/workflows/ci.yml/badge.svg)](https://github.com/NagarajuMudhiraj/ad-trace/actions/workflows/ci.yml)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/)
 [![PyTorch 2.14](https://img.shields.io/badge/PyTorch-2.14-EE4C2C.svg)](https://pytorch.org/)
 [![ProtT5-XL](https://img.shields.io/badge/PLM-ProtT5--XL--UniRef50-darkgreen.svg)](https://huggingface.co/Rostlab/prot_t5_xl_half_uniref50-enc)
