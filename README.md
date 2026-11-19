@@ -16,6 +16,7 @@
 - [Quick Start: Essential Running Commands](#quick-start-essential-running-commands)
 - [Key Results & Milestone Evolution](#key-results--milestone-evolution)
 - [Zero-Leakage Scientific Methodology](#zero-leakage-scientific-methodology)
+- [System Architecture & Pipeline](#system-architecture--pipeline)
 - [Repository Architecture](#repository-architecture)
 - [System Requirements & Installation](#system-requirements--installation)
 - [End-to-End Pipeline Reproduction](#end-to-end-pipeline-reproduction)
@@ -174,6 +175,79 @@ To guarantee complete scientific integrity and prevent benchmark inflation:
 
 ---
 
+## System Architecture & Pipeline
+
+AD-TRACE couples deterministic biological data engineering with high-capacity protein language models, biophysical descriptors, and graph interactome networks.
+
+> 📊 **Interactive Diagram:** Open the standalone interactive architecture visualization in your browser:  
+> **[AD-TRACE Interactive Architecture Diagram](docs/architecture.html)** (Powered by Archify with dark/light themes, live motion, and inspection tools).
+
+```mermaid
+flowchart LR
+    subgraph External["External Biological Data & Hubs"]
+        OT["Open Targets\n(MONDO_0004975)"]
+        SP["UniProtKB / Swiss-Prot\n(Reviewed + KW-0026)"]
+        HF["Hugging Face Hub\n(ProtT5-XL 3B PLM)"]
+        STRING["STRING DB\n(PPI Seed Hub Network)"]
+        AF["AlphaFold DB\n(3D PDB Structures)"]
+    end
+
+    subgraph DataSuite["1. Zero-Leakage Data Suite"]
+        QC["Data Ingestion & QC\n(Deterministic Swiss-Prot Mapper)"]
+        MM["MMseqs2 Clustering\n(40% id, 80% coverage)"]
+        SPLITS[("Frozen Splits\nTrain: 990 | Val: 213 | Test: 213")]
+    end
+
+    subgraph FeatureEngine["2. Multi-Modal Feature Extraction"]
+        PLM["ProtT5-XL Encoder\n(1,024-d Sequence Embeddings)"]
+        DNA["Codon & Biophysics\n(27-d Charge / Hydropathy)"]
+        PPI["Interactome Engine\n(7-d Seed Hub Proximity)"]
+    end
+
+    subgraph Modeling["3. Modeling & Scientific Robustness"]
+        SOTA["SOTA Tuned XGBoost\n(93.44% Acc | 0.9468 ROC-AUC)"]
+        MEST["MEST Stress Suite\n(5-Dimension Robustness Audit)"]
+    end
+
+    subgraph Serving["4. AD-TRACE Live Web Platform"]
+        API["FastAPI Backend Server\n(:8000 REST Endpoints)"]
+        UI["Research Web UI\n(3Dmol.js + GTEx Brain Viewer)"]
+        USER["Researchers & Biologists\n(Browser UI & Terminal CLI)"]
+    end
+
+    OT -->|Clinical Association| QC
+    SP -->|Canonical Sequences| QC
+    QC -->|1,416 Clean Targets| MM
+    MM -->|1,023 Clusters| SPLITS
+
+    SPLITS -.->|Sequences| PLM
+    HF -->|Pretrained Weights| PLM
+    SPLITS -.->|CDS Codons| DNA
+    STRING -.->|PPI Confidence| PPI
+
+    PLM -->|1,024-d PLM| SOTA
+    DNA -->|27-d Biophysics| SOTA
+    PPI -->|7-d Proximity| SOTA
+    SOTA -->|Model Weights| MEST
+    SOTA ==>|Frozen Weights| API
+
+    AF -->|PDB Coordinates| API
+    API -->|JSON REST API| UI
+    UI -->|Interactive 3D Analysis| USER
+```
+
+### Architectural Subsystems
+
+1. **Zero-Leakage Data Engineering Suite:** Curates human targets from Open Targets and Swiss-Prot `KW-0026`, resolves isoforms deterministically, samples length-stratified non-AD controls, and clusters sequences via **MMseqs2** (40% identity, 80% coverage) to prevent homology leakage.
+2. **Multi-Modal Feature Extraction Engine:** Combines representations across three biological dimensions:
+   - **Protein Language Model (PLM):** 1,024-d ProtT5-XL-UniRef50 sequence embeddings.
+   - **Molecular Biophysics & DNA Codons:** 27-d features covering GC-rich codon usage, net physiological charge, aliphatic index, and aromatic density.
+   - **STRING Protein-Protein Interactome:** 7-d topological proximity confidence to canonical AD seed hubs (*APP*, *PSEN1*, *PSEN2*, *MAPT*, *APOE*).
+3. **Machine Learning Core & MEST Stress-Testing Suite:** Tuned regularized XGBoost classifier achieving **93.44% Accuracy** and **0.9468 ROC-AUC**, stress-tested across 5 biological robustness dimensions (Tier Monotonicity, Hub Confounding, Modality Fragility, Tissue Selectivity, and PACI Protective Allele Inversion).
+4. **AD-TRACE Live Web Platform & 3D Viewer:** FastAPI backend serving sub-second inference, GTEx brain-region RNA expression profiles, interactive STRING network graphs, and real-time **3Dmol.js** AlphaFold macromolecular structure rendering.
+
+---
+
 ## Repository Architecture
 
 ```
@@ -197,6 +271,8 @@ ad-trace/
 │       ├── test_model.csv                # LOCKED
 │       └── embeddings/prott5/            # ProtT5-XL 1024-d float32 embeddings
 ├── experiments/                          # Master model benchmark comparison tables
+├── docs/                                 # Interactive architecture diagrams & documentation
+│   └── architecture.html                 # Standalone interactive system architecture (Archify)
 ├── frontend/                             # Live AD-TRACE Web Application
 │   ├── index.html                        # Multi-panel research UI
 │   ├── server.py                         # FastAPI backend & inference server

@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "architecture",
+  "quality": "showcase",
+  "specification": {
+    "path": "D:\\Alzihmers\\.archify\\architecture-ad-trace-architecture-20261120-001925\\candidate.json",
+    "sha256": "7ceb9866ab86a16749a0a3af099b9f11f8c423eca427042bf228ee584617ccf3",
+    "bytes": 9711
+  },
+  "artifact": {
+    "path": "D:\\Alzihmers\\.archify\\architecture-ad-trace-architecture-20261120-001925\\ad-trace-architecture.html",
+    "sha256": "19667cf22ebf0f4259f2f51c7ebff336ba0c65cff7f3ceae0f824284cd03856d",
+    "bytes": 865903
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "D:\\Alzihmers\\.archify\\architecture-ad-trace-architecture-20261120-001925\\ad-trace-architecture.finalize.json",
+    "summaryReceipt": "D:\\Alzihmers\\.archify\\architecture-ad-trace-architecture-20261120-001925\\ad-trace-architecture.finalize-summary.json",
+    "browserCheckReceipt": "D:\\Alzihmers\\.archify\\architecture-ad-trace-architecture-20261120-001925\\ad-trace-architecture.browser-check.json"
+  },
+  "update": {
+    "status": "current",
+    "installedVersion": "3.2.0",
+    "availableVersion": "3.2.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-11-19T18:52:02.706Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  },
+  "visualReview": "not-requested",
+  "durationMs": 17932,
+  "browserCheck": {
+    "requested": true,
+    "ran": true
+  }
+}

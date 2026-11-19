@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "architecture",
+  "quality": "showcase",
+  "specification": {
+    "path": "D:\\Alzihmers\\.archify\\architecture-ad-trace-architecture-20261120-001925\\candidate.json",
+    "sha256": "968208daa04d94ad4ad090214d35b7a481ca2906e7811c60167e8d3f0206f85c",
+    "bytes": 10657
+  },
+  "artifact": {
+    "path": "D:\\Alzihmers\\.archify\\architecture-ad-trace-architecture-20261120-001925\\ad-trace-architecture.html",
+    "sha256": "26d20d7e0d73e9e501f3fc661e6026c9c56c46e1d62d0ec4148350d8d4b493fc",
+    "bytes": 869836
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "D:\\Alzihmers\\.archify\\architecture-ad-trace-architecture-20261120-001925\\review-3\\ad-trace-architecture.finalize.json",
+    "summaryReceipt": "D:\\Alzihmers\\.archify\\architecture-ad-trace-architecture-20261120-001925\\review-3\\ad-trace-architecture.finalize-summary.json",
+    "browserCheckReceipt": "D:\\Alzihmers\\.archify\\architecture-ad-trace-architecture-20261120-001925\\review-3\\ad-trace-architecture.browser-check.json"
+  },
+  "update": {
+    "status": "current",
+    "installedVersion": "3.2.0",
+    "availableVersion": "3.2.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-11-19T18:52:02.706Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  },
+  "visualReview": "not-requested",
+  "durationMs": 2812,
+  "browserCheck": {
+    "requested": true,
+    "ran": true
+  },
+  "visualReviewRecommendation": {
+    "action": "inspect-route-readability",
+    "signals": {
+      "routesOverSuggestedBends": 1
+    },
+    "reason": "Automated gates passed, but crossings or detours still need perceptual review before claiming visual quality.",
+    "affectedRoutes": {
+      "crossings": [],
+      "detours": [
+        {
+          "relationship": {
+            "id": "splits-to-prott5",
+            "from": "splits_dataset",
+            "to": "prott5_encoder",
+            "label": "protein sequences",
+            "collectionIndex": 4,
+            "artifactIndex": 5
+          },
+          "bends": 4,
+          "stretch": 1
+        }
+      ],
+      "truncated": false
+    },
+    "hints": [
+      "splits_dataset → prott5_encoder needs 4 bends: move node splits_dataset or prott5_encoder so they share a row or column with matching centers, or sit diagonally with a clear corner."
+    ],
+    "repair": "Trace these relationships at the desktop viewport. For Architecture, use references/architecture-layout-repair.md: reflow a blocked main path or tangled connected scene, and repair an isolated defect locally only when the surrounding composition is accepted. Preserve all semantic content and user-fixed geometry. Rerun finalize once after the edit."
+  }
+}

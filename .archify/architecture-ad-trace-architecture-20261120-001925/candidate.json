@@ -1,0 +1,428 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "AD-TRACE Architecture & Pipeline",
+    "output": ".archify/architecture-ad-trace-architecture-20261120-001925/ad-trace-architecture.html",
+    "quality_profile": "showcase",
+    "repository": {
+      "url": "https://github.com/NagarajuMudhiraj/ad-trace.git",
+      "provider": "github",
+      "revision": "6f65d3ca0c90ac9849a4c7e3d99dc712fcd4d100"
+    }
+  },
+  "components": [
+    {
+      "id": "opentargets",
+      "type": "external",
+      "label": "Open Targets",
+      "sublabel": "MONDO_0004975 targets",
+      "pos": [40, 100],
+      "size": [140, 60],
+      "sources": [
+        {
+          "path": "scripts/map_open_targets_to_uniprot.py",
+          "line": 1,
+          "end_line": 18,
+          "label": "Target Ingestion"
+        }
+      ]
+    },
+    {
+      "id": "uniprot",
+      "type": "external",
+      "label": "UniProtKB",
+      "sublabel": "Swiss-Prot & KW-0026",
+      "pos": [40, 240],
+      "size": [140, 60],
+      "sources": [
+        {
+          "path": "scripts/map_open_targets_to_uniprot.py",
+          "line": 31,
+          "end_line": 35,
+          "label": "Gold Standard"
+        }
+      ]
+    },
+    {
+      "id": "ingestion_qc",
+      "type": "backend",
+      "label": "Ingestion & QC",
+      "sublabel": "Deterministic mapper",
+      "pos": [270, 100],
+      "size": [140, 60],
+      "sources": [
+        {
+          "path": "scripts/map_open_targets_to_uniprot.py",
+          "line": 11,
+          "end_line": 18,
+          "label": "Canonical Mapper"
+        }
+      ]
+    },
+    {
+      "id": "mmseqs_cluster",
+      "type": "backend",
+      "label": "MMseqs2 Cluster",
+      "sublabel": "40% id, 80% coverage",
+      "pos": [270, 240],
+      "size": [140, 60],
+      "sources": [
+        {
+          "path": "scripts/cluster_sequences.py",
+          "line": 26,
+          "end_line": 50,
+          "label": "Homology Partitioning"
+        }
+      ]
+    },
+    {
+      "id": "splits_dataset",
+      "type": "database",
+      "label": "Frozen Splits",
+      "sublabel": "Train (990) / Val (213)",
+      "pos": [270, 380],
+      "size": [140, 60],
+      "sources": [
+        {
+          "path": "scripts/create_splits.py",
+          "line": 1,
+          "end_line": 25,
+          "label": "Cluster-Aware Splits"
+        }
+      ]
+    },
+    {
+      "id": "hf_hub",
+      "type": "external",
+      "label": "Hugging Face Hub",
+      "sublabel": "Rostlab ProtT5-XL 3B",
+      "pos": [510, 15],
+      "size": [140, 50],
+      "sources": [
+        {
+          "path": "scripts/extract_prott5_embeddings.py",
+          "line": 28,
+          "end_line": 28,
+          "label": "Model Weights Source"
+        }
+      ]
+    },
+    {
+      "id": "prott5_encoder",
+      "type": "backend",
+      "label": "ProtT5-XL Encoder",
+      "sublabel": "1,024-d sequence PLM",
+      "pos": [510, 100],
+      "size": [140, 60],
+      "sources": [
+        {
+          "path": "scripts/extract_prott5_embeddings.py",
+          "line": 1,
+          "end_line": 30,
+          "label": "ProtT5 Embeddings"
+        }
+      ]
+    },
+    {
+      "id": "dna_engine",
+      "type": "backend",
+      "label": "Codon & Biophysics",
+      "sublabel": "27-d composition/charge",
+      "pos": [510, 240],
+      "size": [140, 60],
+      "sources": [
+        {
+          "path": "scripts/train_interactome_dna_model.py",
+          "line": 7,
+          "end_line": 13,
+          "label": "Codon Descriptors"
+        }
+      ]
+    },
+    {
+      "id": "interactome_feat",
+      "type": "backend",
+      "label": "Interactome Engine",
+      "sublabel": "7-d hub seed proximity",
+      "pos": [510, 380],
+      "size": [140, 60],
+      "sources": [
+        {
+          "path": "scripts/train_interactome_dna_model.py",
+          "line": 14,
+          "end_line": 23,
+          "label": "Hub Proximity Features"
+        }
+      ]
+    },
+    {
+      "id": "string_db",
+      "type": "external",
+      "label": "STRING DB",
+      "sublabel": "PPI network confidence",
+      "pos": [510, 480],
+      "size": [140, 50],
+      "sources": [
+        {
+          "path": "scripts/train_interactome_dna_model.py",
+          "line": 14,
+          "end_line": 18,
+          "label": "PPI Hub Proximity"
+        }
+      ]
+    },
+    {
+      "id": "sota_model",
+      "type": "backend",
+      "label": "SOTA XGBoost",
+      "sublabel": "93.44% Acc / 0.947 AUC",
+      "pos": [750, 170],
+      "size": [140, 60],
+      "sources": [
+        {
+          "path": "scripts/train_interactome_dna_model.py",
+          "line": 24,
+          "end_line": 27,
+          "label": "SOTA Classifier"
+        }
+      ]
+    },
+    {
+      "id": "mest_audit",
+      "type": "security",
+      "label": "MEST Stress Suite",
+      "sublabel": "5-dimension audit",
+      "pos": [750, 310],
+      "size": [140, 60],
+      "sources": [
+        {
+          "path": "scripts/stress_test_molecular_evidence.py",
+          "line": 1,
+          "end_line": 33,
+          "label": "Stress Suite"
+        }
+      ]
+    },
+    {
+      "id": "alphafold_db",
+      "type": "external",
+      "label": "AlphaFold DB",
+      "sublabel": "3D structures PDB",
+      "pos": [990, 15],
+      "size": [140, 50],
+      "sources": [
+        {
+          "path": "frontend/server.py",
+          "line": 1069,
+          "end_line": 1085,
+          "label": "PDB Proxy Endpoint"
+        }
+      ]
+    },
+    {
+      "id": "fastapi_server",
+      "type": "backend",
+      "label": "FastAPI Server",
+      "sublabel": "REST API :8000",
+      "pos": [990, 170],
+      "size": [140, 60],
+      "sources": [
+        {
+          "path": "frontend/server.py",
+          "line": 44,
+          "end_line": 50,
+          "label": "FastAPI Instance"
+        }
+      ]
+    },
+    {
+      "id": "web_ui",
+      "type": "frontend",
+      "label": "Research Web UI",
+      "sublabel": "3Dmol.js + GTEx brain",
+      "pos": [990, 310],
+      "size": [140, 60],
+      "sources": [
+        {
+          "path": "frontend/server.py",
+          "line": 1116,
+          "end_line": 1125,
+          "label": "Web UI Handler"
+        }
+      ]
+    },
+    {
+      "id": "researcher",
+      "type": "external",
+      "label": "Researchers",
+      "sublabel": "Browser / CLI inference",
+      "pos": [990, 430],
+      "size": [140, 50],
+      "sources": [
+        {
+          "path": "README.md",
+          "line": 77,
+          "end_line": 87,
+          "label": "User Interface"
+        }
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Zero-Leakage Data Suite",
+      "wraps": ["ingestion_qc", "mmseqs_cluster", "splits_dataset"]
+    },
+    {
+      "kind": "region",
+      "label": "Multi-Modal Modeling & Stress Testing",
+      "wraps": ["prott5_encoder", "dna_engine", "interactome_feat", "sota_model", "mest_audit"]
+    },
+    {
+      "kind": "region",
+      "label": "AD-TRACE Live Web Platform",
+      "wraps": ["fastapi_server", "web_ui"]
+    }
+  ],
+  "connections": [
+    {
+      "id": "ot-to-qc",
+      "from": "opentargets",
+      "to": "ingestion_qc",
+      "label": "MONDO TSV"
+    },
+    {
+      "id": "uniprot-to-qc",
+      "from": "uniprot",
+      "to": "ingestion_qc",
+      "label": "Swiss-Prot"
+    },
+    {
+      "id": "qc-to-mmseqs",
+      "from": "ingestion_qc",
+      "to": "mmseqs_cluster",
+      "label": "1,416 proteins"
+    },
+    {
+      "id": "mmseqs-to-splits",
+      "from": "mmseqs_cluster",
+      "to": "splits_dataset",
+      "label": "homology clusters"
+    },
+    {
+      "id": "splits-to-prott5",
+      "from": "splits_dataset",
+      "to": "prott5_encoder",
+      "label": "protein sequences",
+      "variant": "dashed"
+    },
+    {
+      "id": "hf-to-prott5",
+      "from": "hf_hub",
+      "to": "prott5_encoder",
+      "label": "3B PLM weights",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "splits-to-dna",
+      "from": "splits_dataset",
+      "to": "dna_engine",
+      "label": "CDS sequences",
+      "variant": "dashed"
+    },
+    {
+      "id": "string-to-feat",
+      "from": "string_db",
+      "to": "interactome_feat",
+      "label": "PPI confidence",
+      "variant": "dashed",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "prott5-to-model",
+      "from": "prott5_encoder",
+      "to": "sota_model",
+      "label": "1,024-d PLM"
+    },
+    {
+      "id": "dna-to-model",
+      "from": "dna_engine",
+      "to": "sota_model",
+      "label": "27-d biophysics"
+    },
+    {
+      "id": "feat-to-model",
+      "from": "interactome_feat",
+      "to": "sota_model",
+      "label": "7-d hub proximity"
+    },
+    {
+      "id": "model-to-mest",
+      "from": "sota_model",
+      "to": "mest_audit",
+      "label": "5-dim stress test"
+    },
+    {
+      "id": "model-to-server",
+      "from": "sota_model",
+      "to": "fastapi_server",
+      "label": "frozen weights",
+      "variant": "emphasis"
+    },
+    {
+      "id": "alphafold-to-server",
+      "from": "alphafold_db",
+      "to": "fastapi_server",
+      "label": "PDB proxy",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "server-to-ui",
+      "from": "fastapi_server",
+      "to": "web_ui",
+      "label": "JSON REST API"
+    },
+    {
+      "id": "ui-to-researcher",
+      "from": "web_ui",
+      "to": "researcher",
+      "label": "3D visual analytics"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Zero-Leakage Ingestion",
+      "items": [
+        "Curated human targets from Open Targets and Swiss-Prot KW-0026 gold standard",
+        "MMseqs2 set-cover clustering at 40% sequence identity and 80% coverage",
+        "Cluster-partitioned splits ensuring 0% homology leakage into test cohorts"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Multi-Modal AI Benchmark",
+      "items": [
+        "ProtT5-XL 3-billion parameter transformer extracts 1,024-d sequence embeddings",
+        "Pretrained weights fetched directly from Hugging Face Hub (Rostlab/prot_t5_xl_half_uniref50-enc)",
+        "27-d codon usage, net charge, and hydrophobic aliphatic core descriptors",
+        "7-d STRING interactome proximity confidence to canonical AD seed hubs",
+        "Regularized XGBoost achieves 93.44% Accuracy and 0.9468 ROC-AUC"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Live Research Platform",
+      "items": [
+        "FastAPI backend serving sub-second protein sequence inference",
+        "Integrated 3Dmol.js viewer rendering AlphaFold predicted structures with pLDDT coloring",
+        "GTEx brain-region RNA expression profiles and interactive STRING network graphs"
+      ]
+    }
+  ]
+}

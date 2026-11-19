@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "0e91ba69-877d-44cf-bd4b-f2d3346a36c9",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "D:\\Alzihmers\\.archify\\architecture-ad-trace-architecture-20261120-001925\\candidate.json",
+  "output": "D:\\Alzihmers\\.archify\\architecture-ad-trace-architecture-20261120-001925\\ad-trace-architecture.html",
+  "specification": {
+    "sha256": "968208daa04d94ad4ad090214d35b7a481ca2906e7811c60167e8d3f0206f85c",
+    "bytes": 10657
+  },
+  "artifact": {
+    "sha256": "26d20d7e0d73e9e501f3fc661e6026c9c56c46e1d62d0ec4148350d8d4b493fc",
+    "bytes": 869836
+  }
+}
