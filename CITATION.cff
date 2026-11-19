@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this software or benchmark in your research, please cite it as below."
+title: "AD-TRACE: Alzheimer's Disease Protein Sequence Classification & Multi-Modal Benchmark"
+authors:
+  - family-names: "Bheemavarapu"
+    given-names: "Nagaraju"
+repository-code: "https://github.com/NagarajuMudhiraj/ad-trace"
+url: "https://github.com/NagarajuMudhiraj/ad-trace"
+license: "MIT"
+version: "1.0.0"
+date-released: "2026-10-23"
