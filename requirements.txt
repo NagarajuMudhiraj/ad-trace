@@ -1,0 +1,9 @@
+# Alzheimer's Disease Protein Sequence Classification Project
+# Data Engineering, QC, Clustering, and Validation Dependencies
+biopython==1.88
+pandas==3.0.5
+numpy==2.4.6
+scipy==1.17.1
+scikit-learn==1.9.0
+tqdm==4.70.0
+requests==2.34.2

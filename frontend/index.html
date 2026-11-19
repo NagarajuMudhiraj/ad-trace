@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AD-TRACE — Alzheimer's Protein Association Analysis</title>
+  <meta name="description" content="AD-TRACE: Research-oriented Alzheimer's protein sequence association intelligence platform. Zero-leakage machine learning benchmark and biological evidence analysis.">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Chart.js & 3Dmol.js CDNs -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="https://3Dmol.org/build/3Dmol-min.js"></script>
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="/css/style.css?v=4">
+</head>
+<body>
+  <div class="app-container">
+    <!-- ========================================================
+         A. LEFT SIDEBAR
+         ======================================================== -->
+    <aside class="sidebar" id="app-sidebar">
+      <div class="sidebar-header">
+        <div class="brand-wrapper">
+          <div class="brand-logo-icon">
+            <!-- DNA Helix / Protein SVG Motif -->
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 15c6.667-6 13.333 0 20-6"/>
+              <path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"/>
+              <path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"/>
+              <path d="m17 6-2.5-2.5"/>
+              <path d="m14 8-1-1"/>
+              <path d="m7 18 2.5 2.5"/>
+              <path d="m3.5 14.5.5.5"/>
+              <path d="m20 9 .5.5"/>
+              <path d="m6.5 12.5 1 1"/>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <span class="brand-title">AD-TRACE</span>
+          </div>
+        </div>
+        <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" title="Toggle Sidebar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><line x1="9" x2="9" y1="3" y2="21"/></svg>
+        </button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Navigation</div>
+        <div class="nav-item active" data-view="analyze" id="nav-item-analyze">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          <span>Analyze Protein</span>
+        </div>
+        
+        <div class="nav-section-title" style="margin-top:0.75rem;">Information & Benchmarks</div>
+        <div class="nav-item" data-view="benchmarks" id="nav-item-benchmarks">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+          <span>Benchmark Graphs</span>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- ========================================================
+         MAIN WRAPPER (HEADER + WORKSPACE)
+         ======================================================== -->
+    <div class="main-wrapper">
+      <!-- B. TOP HEADER -->
+      <header class="top-header">
+        <div class="header-left">
+          <div class="header-title-block">
+            <div class="header-app-title">
+              AD-TRACE
+            </div>
+            <div class="header-subtitle">Alzheimer's Protein Association Analysis</div>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <a href="#" class="header-nav-link" id="header-home-btn">Home</a>
+          <div class="model-status-pill" id="backend-status-pill">
+            <span class="status-dot"></span>
+            <span>Checking Model...</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- C. MAIN WORKSPACE -->
+      <main class="workspace-scroll" id="main-workspace">
+        <div class="workspace-content">
+
+          <!-- ====================================================
+               VIEW 1: ANALYZE PROTEIN (PRIMARY VIEW)
+               ==================================================== -->
+          <div class="view-section" id="view-analyze" style="display:block;">
+            <!-- CARD 1: PROTEIN SEQUENCE INPUT -->
+            <section class="card" id="card-sequence-input">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <h3 class="card-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--primary-blue);"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                    Protein Sequence Input
+                  </h3>
+                  <span class="card-subtitle">Paste a protein amino-acid sequence to begin analysis. Supports plain text and FASTA format.</span>
+                </div>
+              </div>
+
+              <div class="card-body">
+                <div class="input-control-panel">
+                  <!-- Sequence Textarea -->
+                  <div class="textarea-container">
+                    <textarea 
+                      class="sequence-textarea" 
+                      id="sequence-textarea" 
+                      placeholder=">Example_Protein&#10;Paste amino acid sequence here (e.g. MAEPRQEFEVMEDHAGTYGLGDRKDQGGY...)"
+                      spellcheck="false"
+                    ></textarea>
+                  </div>
+
+                  <!-- Metadata Bar -->
+                  <div class="sequence-meta-bar">
+                    <span>Alphabet: Standard 20 Amino Acids</span>
+                    <span id="char-count" style="font-family:var(--font-mono);font-weight:600;">0 aa</span>
+                  </div>
+
+                  <!-- Validation Feedback -->
+                  <div class="input-feedback-message" id="input-feedback"></div>
+
+                  <!-- Actions Bar -->
+                  <div class="input-actions-bar">
+                    <div class="actions-left">
+                      <button class="btn btn-ghost" id="clear-seq-btn">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                        Clear
+                      </button>
+                    </div>
+                    <div class="actions-right">
+                      <button class="btn btn-primary" id="analyze-seq-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                        Analyze Sequence
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- RESULTS SECTION (Reveals after analysis) -->
+            <div id="results-section" style="display:none;margin-top:1.5rem;">
+              <!-- GRID: PREDICTION SUMMARY + IDENTITY RESOLUTION -->
+              <div class="results-grid">
+                <!-- CARD 2: PREDICTION SUMMARY -->
+                <section class="card" id="card-prediction-summary">
+                  <div class="card-header">
+                    <div class="card-title-group">
+                      <h3 class="card-title">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--primary-blue);"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                        Alzheimer's Association Prediction
+                      </h3>
+                      <span class="card-subtitle">Zero-leakage model inference derived strictly from primary sequence.</span>
+                    </div>
+                  </div>
+
+                  <div class="card-body prediction-card-body">
+                    <!-- Badge Row -->
+                    <div class="prediction-badge-row">
+                      <div class="prediction-badge" id="prediction-badge">
+                        <span>Evaluating...</span>
+                      </div>
+                      <span style="font-size:0.75rem;color:var(--navy-500);font-weight:600;" id="prediction-confidence-val">
+                        Distance Confidence: --
+                      </span>
+                    </div>
+
+                    <!-- Gauge Box -->
+                    <div class="prob-meter-box">
+                      <div class="prob-meter-header">
+                        <span style="font-size:0.8125rem;font-weight:600;color:var(--navy-600);">Model Probability</span>
+                        <span class="prob-threshold-tag">Threshold: 0.50</span>
+                      </div>
+                      <div class="prob-large-number" id="prob-large-number">0.0000</div>
+                      
+                      <!-- Visual Bar -->
+                      <div class="prob-bar-track">
+                        <div class="prob-marker-50" title="Decision Boundary (0.50)"></div>
+                        <div class="prob-bar-fill" id="prob-bar-fill" style="width:50%;"></div>
+                      </div>
+
+                      <div class="prob-meter-labels">
+                        <span>0.00 (Control-like)</span>
+                        <span>0.50 (Boundary)</span>
+                        <span>1.00 (AD-Associated)</span>
+                      </div>
+                    </div>
+
+                    <!-- Short Interpretation -->
+                    <div class="interpretation-box" id="prediction-interpretation">
+                      Awaiting sequence inference results...
+                    </div>
+                  </div>
+                </section>
+
+                <!-- CARD 3: PROTEIN IDENTITY RESOLUTION -->
+                <section class="card" id="card-identity-resolution">
+                  <div class="card-header">
+                    <div class="card-title-group">
+                      <h3 class="card-title">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--primary-blue);"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                        Protein Identity Resolution
+                      </h3>
+                      <span class="card-subtitle">Real sequence alignment against benchmark proteins and SwissProt annotations.</span>
+                    </div>
+                    <button class="btn btn-secondary" id="view-alignment-btn" style="display:none;padding:0.375rem 0.75rem;font-size:0.75rem;">
+                      View Alignment
+                    </button>
+                  </div>
+
+                  <div class="card-body" style="padding:0.5rem 1.25rem 1.25rem;">
+                    <div class="identity-table-wrapper">
+                      <table class="scientific-table">
+                        <thead>
+                          <tr>
+                            <th>Biological Property</th>
+                            <th>Resolved Metric / Annotation</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td class="table-label">Best Match</td>
+                            <td class="table-val" id="ident-best-match">--</td>
+                          </tr>
+                          <tr>
+                            <td class="table-label">UniProt Accession</td>
+                            <td class="table-val mono" id="ident-accession">--</td>
+                          </tr>
+                          <tr>
+                            <td class="table-label">Gene Symbol</td>
+                            <td class="table-val" id="ident-gene">--</td>
+                          </tr>
+                          <tr>
+                            <td class="table-label">Protein Name</td>
+                            <td class="table-val" id="ident-protein-name">--</td>
+                          </tr>
+                          <tr>
+                            <td class="table-label">Organism</td>
+                            <td class="table-val" id="ident-organism">Homo sapiens</td>
+                          </tr>
+                          <tr>
+                            <td class="table-label">Sequence Identity</td>
+                            <td class="table-val mono" id="ident-seq-identity">--</td>
+                          </tr>
+                          <tr>
+                            <td class="table-label">Sequence Coverage</td>
+                            <td class="table-val mono" id="ident-coverage">--</td>
+                          </tr>
+                          <tr>
+                            <td class="table-label">Match Confidence</td>
+                            <td class="table-val" id="ident-match-confidence">--</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </section>
+              </div>
+
+              <!-- CARD 4: BIOLOGICAL EVIDENCE TABS -->
+              <section class="card evidence-card" style="margin-top:1.5rem;">
+                <div class="tabs-nav-bar">
+                  <button class="tab-btn active" data-tab="overview">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+                    Evidence Overview
+                  </button>
+                  <button class="tab-btn" data-tab="expression">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    Brain Expression
+                  </button>
+                  <button class="tab-btn" data-tab="network">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                    Interaction Network
+                  </button>
+                  <button class="tab-btn" data-tab="sequence">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" x2="20" y1="9" y2="9"/><line x1="4" x2="20" y1="15" y2="15"/><line x1="10" x2="8" y1="3" y2="21"/><line x1="16" x2="14" y1="3" y2="21"/></svg>
+                    Sequence Analysis
+                  </button>
+                  <button class="tab-btn" data-tab="structure">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                    Protein Structure
+                  </button>
+                  <button class="tab-btn" data-tab="report">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    Detailed Report
+                  </button>
+                </div>
+
+                <!-- TAB PANELS -->
+                <div class="tab-panel active" id="tab-panel-overview">
+                  <div class="overview-grid">
+                    <!-- Card A: Brain Expression Mini -->
+                    <div class="overview-mini-card">
+                      <div class="mini-card-header">
+                        <span class="mini-card-title">Brain Expression</span>
+                        <span class="mini-card-source">GTEx v10</span>
+                      </div>
+                      <div id="overview-expr-preview">
+                        <div class="empty-state-box" style="padding:1rem;">Awaiting analysis...</div>
+                      </div>
+                    </div>
+
+                    <!-- Card B: Protein Interaction Mini -->
+                    <div class="overview-mini-card">
+                      <div class="mini-card-header">
+                        <span class="mini-card-title">Interaction Network</span>
+                        <span class="mini-card-source">STRING v12</span>
+                      </div>
+                      <div id="overview-network-preview">
+                        <div class="empty-state-box" style="padding:1rem;">Awaiting analysis...</div>
+                      </div>
+                    </div>
+
+                    <!-- Card C: Sequence Evidence Mini -->
+                    <div class="overview-mini-card">
+                      <div class="mini-card-header">
+                        <span class="mini-card-title">Sequence Evidence</span>
+                        <span class="mini-card-source">Biophysical</span>
+                      </div>
+                      <div id="overview-seq-preview">
+                        <div class="empty-state-box" style="padding:1rem;">Awaiting analysis...</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="tab-panel" id="tab-panel-expression">
+                  <div id="brain-expression-content"></div>
+                </div>
+
+                <div class="tab-panel" id="tab-panel-network">
+                  <div id="interaction-network-content"></div>
+                </div>
+
+                <div class="tab-panel" id="tab-panel-sequence">
+                  <div id="sequence-analysis-content"></div>
+                </div>
+
+                <div class="tab-panel" id="tab-panel-structure">
+                  <div id="structure-tab-content"></div>
+                </div>
+
+                <div class="tab-panel" id="tab-panel-report">
+                  <div id="detailed-report-content"></div>
+                </div>
+              </section>
+            </div>
+          </div>
+
+          <!-- ====================================================
+               VIEW: BENCHMARK GRAPHS & VISUALIZATIONS
+               ==================================================== -->
+          <div class="view-section" id="view-benchmarks" style="display:none;">
+            <div class="card" style="margin-bottom:1.5rem;">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <h3 class="card-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--primary-blue);"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+                    Publication Benchmark Visualizations
+                  </h3>
+                  <span class="card-subtitle">Official experimental figures validating model accuracy progression from 60.09% to 93.44% SOTA. Click any graph to expand in full resolution.</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Complete Graphs Grid -->
+            <div class="benchmarks-grid">
+              <!-- Figure 1 -->
+              <div class="graph-card">
+                <div class="graph-img-wrapper" onclick="openLightbox('/figures/1_benchmark_accuracy_comparison.png', 'Figure 1: Master Accuracy & ROC-AUC Comparison Across Architectures')">
+                  <img src="/figures/1_benchmark_accuracy_comparison.png" alt="Figure 1: Master Accuracy Comparison" loading="lazy">
+                  <div class="graph-zoom-badge">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                    Expand
+                  </div>
+                </div>
+                <div class="graph-card-content">
+                  <span class="pill-exact" style="align-self:flex-start;">Figure 1</span>
+                  <h4 class="graph-card-title">Master Accuracy & ROC-AUC Comparison</h4>
+                  <p class="graph-card-desc">Comprehensive cross-architecture benchmark comparing Classical Baseline (60.09%), 1D CNN + BiLSTM (50.23%), ProtT5 PLM (65.73%), Curated Multi-Modal v2 (85.90%), and the Winning Multi-Modal XGBoost (93.44%).</p>
+                </div>
+              </div>
+
+              <!-- Figure 2 -->
+              <div class="graph-card">
+                <div class="graph-img-wrapper" onclick="openLightbox('/figures/2_modality_contribution_comparison.png', 'Figure 2: Modality Contribution & Ablation Gains')">
+                  <img src="/figures/2_modality_contribution_comparison.png" alt="Figure 2: Modality Contribution Comparison" loading="lazy">
+                  <div class="graph-zoom-badge">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                    Expand
+                  </div>
+                </div>
+                <div class="graph-card-content">
+                  <span class="pill-exact" style="align-self:flex-start;">Figure 2</span>
+                  <h4 class="graph-card-title">Modality Contribution & Ablation Gains</h4>
+                  <p class="graph-card-desc">Quantified waterfall gains illustrating the step-by-step impact of Amino Acid Composition (51.6%), Dipeptides (55.4%), TF-IDF (60.1%), ProtT5 Embeddings (65.7%), Noise Filtering (85.9%), and Interactome Hubs (93.44%).</p>
+                </div>
+              </div>
+
+              <!-- Figure 3 -->
+              <div class="graph-card">
+                <div class="graph-img-wrapper" onclick="openLightbox('/figures/3_confusion_matrices_comparison.png', 'Figure 3: Confusion Matrices Comparison')">
+                  <img src="/figures/3_confusion_matrices_comparison.png" alt="Figure 3: Confusion Matrices Comparison" loading="lazy">
+                  <div class="graph-zoom-badge">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                    Expand
+                  </div>
+                </div>
+                <div class="graph-card-content">
+                  <span class="pill-exact" style="align-self:flex-start;">Figure 3</span>
+                  <h4 class="graph-card-title">Confusion Matrices Comparison</h4>
+                  <p class="graph-card-desc">Validation confusion matrices contrasting the raw sequence baseline with the multi-modal XGBoost model, demonstrating 95.74% specificity (45/47 controls) and 85.71% sensitivity (12/14 AD targets).</p>
+                </div>
+              </div>
+
+              <!-- Figure 4 -->
+              <div class="graph-card">
+                <div class="graph-img-wrapper" onclick="openLightbox('/figures/4_roc_curves_comparison.png', 'Figure 4: Receiver Operating Characteristic (ROC) Comparison')">
+                  <img src="/figures/4_roc_curves_comparison.png" alt="Figure 4: ROC Curves Comparison" loading="lazy">
+                  <div class="graph-zoom-badge">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                    Expand
+                  </div>
+                </div>
+                <div class="graph-card-content">
+                  <span class="pill-exact" style="align-self:flex-start;">Figure 4</span>
+                  <h4 class="graph-card-title">ROC Curves & Area Under Curve (AUC)</h4>
+                  <p class="graph-card-desc">Discriminative separation trajectories showing progression from AUC 0.6188 (classical sequence) and 0.7311 (ProtT5 baseline) to 0.8868 (curated v2) and 0.9468 (interactome-enhanced v3).</p>
+                </div>
+              </div>
+
+              <!-- Figure 5 -->
+              <div class="graph-card">
+                <div class="graph-img-wrapper" onclick="openLightbox('/figures/5_precision_recall_curves.png', 'Figure 5: Precision-Recall Curves (PR-AUC)')">
+                  <img src="/figures/5_precision_recall_curves.png" alt="Figure 5: Precision-Recall Curves" loading="lazy">
+                  <div class="graph-zoom-badge">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                    Expand
+                  </div>
+                </div>
+                <div class="graph-card-content">
+                  <span class="pill-exact" style="align-self:flex-start;">Figure 5</span>
+                  <h4 class="graph-card-title">Precision-Recall Curves (PR-AUC)</h4>
+                  <p class="graph-card-desc">Precision-recall curves highlighting reliable prioritization under class imbalance. Multi-modal XGBoost maintains high positive predictive precision across broad recall thresholds.</p>
+                </div>
+              </div>
+
+              <!-- Figure 6 -->
+              <div class="graph-card">
+                <div class="graph-img-wrapper" onclick="openLightbox('/figures/6_impact_of_label_noise.png?v=2', 'Figure 6: Impact of Label Noise & Evidence Tiers')">
+                  <img src="/figures/6_impact_of_label_noise.png?v=2" alt="Figure 6: Impact of Label Noise" loading="lazy">
+                  <div class="graph-zoom-badge">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                    Expand
+                  </div>
+                </div>
+                <div class="graph-card-content">
+                  <span class="pill-exact" style="align-self:flex-start;">Figure 6</span>
+                  <h4 class="graph-card-title">Impact of Label Noise & Evidence Tiers</h4>
+                  <p class="graph-card-desc">Dual comparative analysis: <strong>(A) Evidence Stratification</strong> reveals how separating weak bystander CRISPR hits (score &lt; 0.45, accuracy ~61%) from causal targets unlocked 85%+ accuracy. <strong>(B) Direct Model Comparison</strong> proves multi-modal SOTA leaps +31.9% (61.5% → 93.4%) when bystander noise is removed, whereas pure sequence models plateau under 70%.</p>
+                </div>
+              </div>
+
+              <!-- Figure 7 -->
+              <div class="graph-card">
+                <div class="graph-img-wrapper" onclick="openLightbox('/figures/7_per_class_metrics_breakdown.png', 'Figure 7: Per-Class Sensitivity, Specificity & F1')">
+                  <img src="/figures/7_per_class_metrics_breakdown.png" alt="Figure 7: Per-Class Metrics Breakdown" loading="lazy">
+                  <div class="graph-zoom-badge">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                    Expand
+                  </div>
+                </div>
+                <div class="graph-card-content">
+                  <span class="pill-exact" style="align-self:flex-start;">Figure 7</span>
+                  <h4 class="graph-card-title">Per-Class Metrics Breakdown</h4>
+                  <p class="graph-card-desc">Detailed comparison of sensitivity, specificity, positive predictive value, and harmonic F1 score across Alzheimer targets vs. non-neurodegenerative control proteins.</p>
+                </div>
+              </div>
+
+              <!-- Figure 8: MEST -->
+              <div class="graph-card">
+                <div class="graph-img-wrapper" onclick="openLightbox('/figures/8_molecular_evidence_stress_test.png', 'Figure 8: Molecular Evidence Stress-Testing (MEST) Suite')">
+                  <img src="/figures/8_molecular_evidence_stress_test.png" alt="Figure 8: Molecular Evidence Stress-Test" loading="lazy">
+                  <div class="graph-zoom-badge">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                    Expand
+                  </div>
+                </div>
+                <div class="graph-card-content">
+                  <span class="pill-exact" style="align-self:flex-start;">Figure 8</span>
+                  <h4 class="graph-card-title">Molecular Evidence Stress-Testing (MEST)</h4>
+                  <p class="graph-card-desc">Multi-axis stress evaluation across Evidence Tier Monotonicity (TMR=1.00), Modality Fragility Decay Slopes, and Protective-Allele Counterfactual Inversion (PACI Delta &gt; +0.32).</p>
+                </div>
+              </div>
+
+              <!-- Figure 9 -->
+              <div class="graph-card">
+                <div class="graph-img-wrapper" onclick="openLightbox('/figures/neural_training_history.png', 'Figure 9: Neural Architecture Training & Loss Dynamics')">
+                  <img src="/figures/neural_training_history.png" alt="Figure 9: Neural Training Dynamics" loading="lazy">
+                  <div class="graph-zoom-badge">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                    Expand
+                  </div>
+                </div>
+                <div class="graph-card-content">
+                  <span class="pill-exact" style="align-self:flex-start;">Figure 9</span>
+                  <h4 class="graph-card-title">Neural Architecture Training & Loss Dynamics</h4>
+                  <p class="graph-card-desc">Epoch-by-epoch training and validation loss curves for 1D CNN and BiLSTM networks, demonstrating that deep architectures memorized training sequences while suffering validation generalization gaps on raw sequences.</p>
+                </div>
+              </div>
+
+              <!-- Figure 10 -->
+              <div class="graph-card">
+                <div class="graph-img-wrapper" onclick="openLightbox('/figures/sequence_length_distribution.png', 'Figure 10: Sequence Length Distribution & Truncation Impact')">
+                  <img src="/figures/sequence_length_distribution.png" alt="Figure 10: Sequence Length Distribution" loading="lazy">
+                  <div class="graph-zoom-badge">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                    Expand
+                  </div>
+                </div>
+                <div class="graph-card-content">
+                  <span class="pill-exact" style="align-self:flex-start;">Figure 10</span>
+                  <h4 class="graph-card-title">Sequence Length Distribution & Truncation Impact</h4>
+                  <p class="graph-card-desc">Residue length distribution across 1,416 benchmark proteins demonstrating why non-truncating global representations (ProtT5 mean pooling & composition) preserve critical C-terminal domains.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          </div>
+
+        </div>
+      </main>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="workspace-loading-overlay">
+      <div class="spinner"></div>
+      <div style="font-size:0.9375rem;font-weight:600;color:var(--navy-800);">Running Inference & Querying Biological Evidence...</div>
+      <div style="font-size:0.8125rem;color:var(--navy-500);">Evaluating sequence, matching identity, retrieving GTEx & STRING data.</div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       MODALS
+       ======================================================== -->
+  <!-- Alignment Modal -->
+  <div class="modal-backdrop" id="alignment-modal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">Sequence Alignment Details</h3>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body" id="alignment-modal-body">
+        <!-- Dynamically rendered -->
+      </div>
+    </div>
+  </div>
+
+  <!-- About Modal -->
+  <div class="modal-backdrop" id="about-modal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">About AD-TRACE</h3>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body" style="font-size:0.875rem;line-height:1.6;color:var(--navy-700);display:flex;flex-direction:column;gap:0.875rem;">
+        <p><strong>AD-TRACE</strong> (Alzheimer's Protein Association Analysis) is a scientific intelligence dashboard designed for computational biology research, target prioritization, and zero-leakage sequence evaluation.</p>
+        <div style="background:var(--navy-50);padding:0.875rem;border-radius:var(--radius-sm);border-left:3px solid var(--primary-blue);">
+          <strong>Research Milestone:</strong> AD-TRACE incorporates a breakthrough <strong>SOTA (State of the Art)</strong> multi-modal architecture achieving <strong>93.44% Validation Accuracy</strong> and <strong>0.9468 ROC-AUC</strong> by uniting ProtT5 protein language models, STRING interactome hub proximity, and cDNA codon bias.
+        </div>
+        <p>Built for academic rigor, AD-TRACE seamlessly integrates live statistical ML inference with authentic multi-database biological evidence: GTEx v10 brain transcriptomics, STRING v12 physical interactomes, and AlphaFold 3D coordinates.</p>
+        <div style="display:flex;gap:0.75rem;margin-top:0.5rem;">
+          <button class="btn btn-primary" onclick="openBenchmarksFromModal()" style="flex:1;justify-content:center;font-size:0.8125rem;">
+            📊 Benchmark Graphs & Validation
+          </button>
+        </div>
+        <p style="font-size:0.75rem;color:var(--navy-400);margin-top:0.25rem;">Version 1.0.0 • Non-Clinical RUO</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Help Modal -->
+  <div class="modal-backdrop" id="help-modal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">AD-TRACE Quick Help Guide</h3>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body" style="font-size:0.875rem;line-height:1.6;color:var(--navy-700);display:flex;flex-direction:column;gap:0.875rem;">
+        <ol style="padding-left:1.25rem;display:flex;flex-direction:column;gap:0.5rem;">
+          <li><strong>Enter a sequence:</strong> Paste your FASTA-formatted or raw amino acid protein sequence into the input area.</li>
+          <li><strong>Click "Analyze Sequence":</strong> The server validates against the standard 20 amino acid alphabet, computes genuine biophysical descriptors, evaluates the association classifier, and performs identity mapping against 1,416 benchmark proteins.</li>
+          <li><strong>Explore the Biological Evidence Tabs:</strong>
+            <ul style="padding-left:1rem;margin-top:0.25rem;display:flex;flex-direction:column;gap:0.25rem;font-size:0.8125rem;">
+              <li><strong>Brain Expression:</strong> 13 GTEx v10 human brain regions (baseline non-diseased TPM).</li>
+              <li><strong>Interaction Network:</strong> STRING v12 physical/functional interactome with interactive zoom/pan.</li>
+              <li><strong>3D Structure:</strong> AlphaFold 3Dmol.js viewer with pLDDT confidence spectrum.</li>
+            </ul>
+          </li>
+          <li><strong>Understanding "SOTA":</strong> SOTA stands for <em>State-of-the-Art</em> (93.44% Accuracy, ROC-AUC 0.947), representing the peak multi-modal research benchmark.</li>
+          <li><strong>Export Results:</strong> Download comprehensive reports in CSV or JSON format from the Detailed Report tab.</li>
+        </ol>
+        <button class="btn btn-primary" onclick="openBenchmarksFromModal()" style="width:100%;justify-content:center;margin-top:0.5rem;font-size:0.8125rem;">
+          📊 View Benchmark Graphs & Visualizations
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- Lightbox Modal for Publication Graphs -->
+  <div class="lightbox-backdrop" id="graph-lightbox-modal">
+    <div class="lightbox-container">
+      <button class="lightbox-close-btn" id="lightbox-close-btn" onclick="closeLightbox()">&times;</button>
+      <img src="" alt="High Resolution Benchmark Graph" class="lightbox-img" id="lightbox-img">
+      <div class="lightbox-caption" id="lightbox-caption"></div>
+    </div>
+  </div>
+
+  <!-- Application Logic -->
+  <script src="/js/app.js?v=5"></script>
+</body>
+</html>

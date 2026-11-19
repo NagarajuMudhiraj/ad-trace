@@ -1,0 +1,20 @@
+{
+  "best_model_name": "ProtT5 + Seq Descriptors (RBF SVM C=3.0) [BEST]",
+  "best_validation_accuracy": 0.8589743589743589,
+  "optimal_decision_threshold": 0.33999999999999997,
+  "target_accuracy_achieved": true,
+  "feature_dimensions": {
+    "prott5_dim": 1024,
+    "descriptors_dim": 24,
+    "descriptor_weight": 0.12,
+    "total_dim": 1048
+  },
+  "dataset_v2_metrics": {
+    "train_samples": 349,
+    "validation_samples": 78,
+    "positive_train": 141,
+    "control_train": 208,
+    "positive_val": 31,
+    "control_val": 47
+  }
+}

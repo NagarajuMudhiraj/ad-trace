@@ -1,0 +1,30 @@
+{
+  "total_samples": 1416,
+  "positives": 708,
+  "controls": 708,
+  "uniprot_pos_count": 19,
+  "uniprot_pos_pct": 2.68,
+  "ot_only_count": 689,
+  "ot_only_pct": 97.32,
+  "high_evidence_count": 7,
+  "moderate_evidence_count": 86,
+  "weak_evidence_count": 607,
+  "low_evidence_count": 8,
+  "source_counts": {
+    "europepmc": 585,
+    "crisprScreen": 438,
+    "gwasCredibleSets": 251,
+    "expressionAtlas": 169,
+    "clinicalPrecedence": 120,
+    "impc": 71,
+    "reactome": 20,
+    "UniProt": 19,
+    "eva": 14,
+    "uniprotLiterature": 9
+  },
+  "mean_ot_score_tp": 0.4109,
+  "mean_ot_score_fn": 0.4041,
+  "clusters_total": 1302,
+  "singletons": 1226,
+  "multi_seq_clusters": 76
+}

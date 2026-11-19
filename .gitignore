@@ -1,0 +1,54 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE & Editor settings
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary / root-level browser download duplicates
+uniprot_sprot.fasta (1)/
+uniprotkb_keyword_KW_0026_AND_reviewed_2026_10_07.fasta/
+/OT-MONDO_0004975-associated-targets-10_7_2026-v26_09.tsv
+
+# Large raw database dumps (>100MB exceeds GitHub limit)
+# Canonical Swiss-Prot full database (see data/raw/README.md for download instructions)
+data/raw/uniprot_sprot.fasta
+data/raw/*.fasta.gz
+*.fasta.gz

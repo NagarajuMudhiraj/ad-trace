@@ -1,0 +1,20 @@
+{
+  "model_name": "Tuned XGBoost (STRING Interactome + DNA + ProtT5)",
+  "accuracy": 0.9344262295081968,
+  "roc_auc": 0.9468085106382977,
+  "balanced_accuracy": 0.9072948328267477,
+  "f1_score": 0.8571428571428571,
+  "optimal_threshold": 0.21,
+  "feature_dimensions": {
+    "prott5": 1024,
+    "dna_descriptors": 27,
+    "string_interactome": 7,
+    "total": 1058
+  },
+  "sample_counts": {
+    "train": 281,
+    "validation": 61,
+    "val_pos": 14,
+    "val_ctrl": 47
+  }
+}

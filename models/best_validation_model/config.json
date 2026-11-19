@@ -1,0 +1,13 @@
+{
+    "model_type": "classical_tabular",
+    "model_class": "LogisticRegression",
+    "feature_engineering": "AAC(20) + DPC(400) + Char_TFIDF(2500)",
+    "total_features": 2920,
+    "best_hyperparameters": {
+        "C": 2.0,
+        "max_iter": 1000,
+        "solver": "lbfgs"
+    },
+    "decision_threshold": 0.5,
+    "random_seed": 42
+}

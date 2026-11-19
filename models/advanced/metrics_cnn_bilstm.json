@@ -1,0 +1,1 @@
+{"model": "Hybrid CNN + BiLSTM", "parameters": "embed=64, conv=64, lstm=64, max_len=1000, lr=0.001", "training_time": 95.6, "accuracy": 0.5023, "precision": 0.5, "recall": 0.9811, "f1": 0.6624, "roc_auc": 0.5643, "pr_auc": 0.5535, "mcc": 0.0303, "confusion_matrix": "TN=3, FP=104, FN=2, TP=104", "best_epoch": 7, "total_epochs": 15}

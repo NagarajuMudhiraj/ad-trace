@@ -1,0 +1,10 @@
+experiment_id,model,parameters,training_time,validation_accuracy,validation_precision,validation_recall,validation_f1,validation_roc_auc,validation_pr_auc,validation_mcc
+EXP_01,Logistic Regression (AAC),"C=1.0, features=AAC(20)",0.01,0.5164,0.5133,0.5472,0.5297,0.5205,0.5292,0.0332
+EXP_02,Logistic Regression (Comb),"C=2.0, features=AAC+DPC+TFIDF(2920)",0.04,0.6009,0.5897,0.6509,0.6188,0.6188,0.5986,0.2033
+EXP_03,Linear SVM (Comb),"C=1.0, features=AAC+DPC+TFIDF(2920)",0.07,0.5869,0.5804,0.6132,0.5963,0.6064,0.5813,0.1742
+EXP_04,Random Forest (Comb),"n_est=300, max_d=12, features=2920",0.63,0.554,0.547,0.6038,0.574,0.5715,0.5693,0.109
+EXP_05,XGBoost (Comb),"n_est=200, max_d=4, lr=0.03, features=2920",8.87,0.5446,0.5372,0.6132,0.5727,0.5744,0.5948,0.0907
+EXP_06,"1D-CNN (Multi-Scale 3,5,7) [Fixed Length (L=1000)]","filters=64, kernels=[3,5,7], Fixed Length (L=1000)",78.93,0.5164,0.5077,0.934,0.6578,0.5749,0.547,0.0661
+EXP_07,"1D-CNN (Multi-Scale 3,5,7) [Fixed Length (L=1500)]","filters=64, kernels=[3,5,7], Fixed Length (L=1500)",156.27,0.5915,0.6863,0.3302,0.4459,0.6186,0.6094,0.2117
+EXP_08,"Chunked 1D-CNN [Chunk-Attention (W=512, Nc<=8)]","filters=64, kernels=[3,5,7], Chunk-Attention (W=512, Nc<=8)",587.7,0.5587,0.5448,0.6887,0.6083,0.5927,0.5912,0.1227
+EXP_09,Hybrid CNN + BiLSTM,"embed=64, conv=64, lstm=64, max_len=1000, lr=0.001",95.6,0.5023,0.5,0.9811,0.6624,0.5643,0.5535,0.0303
