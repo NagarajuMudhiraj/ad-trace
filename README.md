@@ -8,6 +8,13 @@
 
 > **A rigorous, zero-leakage computational biology platform and machine learning benchmark for classifying Alzheimer's Disease (MONDO_0004975) associated proteins directly from sequence representations, molecular biophysics, and interactome networks.**
 
+<p align="center">
+  <img src="frontend/assets/images/hero.jpg" alt="AD-TRACE Platform Overview" width="100%">
+</p>
+<p align="center">
+  <em>Figure 1: AD-TRACE interactive research platform showing real-time multi-modal sequence inference, biophysical property radar profiling, GTEx brain-region RNA expression charts, and 3Dmol.js AlphaFold macromolecular structure visualization.</em>
+</p>
+
 ---
 
 ## Table of Contents
@@ -132,6 +139,10 @@ python scripts/generate_benchmark_visualizations.py
 
 ## Key Results & Milestone Evolution
 
+<p align="center">
+  <img src="reports/figures/1_benchmark_accuracy_comparison.png" alt="Benchmark Evolution Across Milestones" width="95%">
+</p>
+
 Across multiple architectural iterations evaluated on cluster-partitioned validation data (zero sequence overlap with training), model performance evolved as follows:
 
 | Milestone | Architecture | Modalities & Features | Accuracy | Balanced Acc | F1-Score | ROC-AUC | PR-AUC | Status |
@@ -152,6 +163,10 @@ Across multiple architectural iterations evaluated on cluster-partitioned valida
 - **Optimal Decision Threshold:** $0.21$
 
 ### Molecular Evidence Stress-Testing Suite (MEST) Results:
+
+<p align="center">
+  <img src="reports/figures/8_molecular_evidence_stress_test.png" alt="Molecular Evidence Stress Test Results" width="95%">
+</p>
 
 | Model Architecture | Accuracy | ROC-AUC | Tier Monotonicity (TMR) | Hub Resistance (BRR) | PACI Risk Delta | **Molecular Stress Score (MSTS)** | Status |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
